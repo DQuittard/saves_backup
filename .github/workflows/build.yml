@@ -1,0 +1,43 @@
+name: Build Executables
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - name: Récupérer le code
+      uses: actions/checkout@v4
+
+    - name: Configurer Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Installer Tkinter (Linux uniquement)
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y python3-tk
+
+    - name: Installer PyInstaller
+      run: |
+        python -m pip install --upgrade pip
+        pip install pyinstaller
+
+    - name: Compiler le projet
+      run: |
+        pyinstaller --onefile --windowed --name="SwitchSavesSync" gui.py
+
+    - name: Sauvegarder les exécutables générés
+      uses: actions/upload-artifact@v4
+      with:
+        name: SwitchSavesSync-${{ matrix.os }}
+        path: dist/
