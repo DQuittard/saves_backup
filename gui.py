@@ -35,8 +35,8 @@ class SaveManagerGUI:
 
         #self.config_path = Path("default_config.json")
         APP_DIR = main.get_app_dir()
-        config_path = APP_DIR / "default_config.json"
-        db_path = APP_DIR / "dats" / "switch_light_db.json"
+        self.config_path = APP_DIR / "default_config.json"
+        self.db_path = APP_DIR / "dats" / "switch_light_db.json"
         #self.config_path = Path("/var/mnt/DATA/DATAsync/Coding/Projects/Python/saves_manager_stuff/config.json")
         self.config = self.load_config()
 
@@ -253,7 +253,7 @@ class SaveManagerGUI:
                 )
             )
 
-            main.switch_database = main.get_config_json(Path("dats/switch_light_db.json"))
+            main.switch_database = main.get_config_json(Path(self.db_path))
 
             print("\n--- 1. Backup Sauvegardes Eden ---")
             main.make_backup_eden_launch(cfg, backups_dir)
