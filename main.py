@@ -5,8 +5,14 @@ import shutil
 from datetime import datetime
 import struct
 from copy import deepcopy
+import sys
 
 from generate_switch_db import generate_switch_db
+
+def get_app_dir():
+    if getattr(sys, 'frozen', False):
+        return Path(sys.executable).parent
+    return Path(__file__).parent
 
 def is_valid_save_folder(folder_path: Path) -> bool:
     """Vérifie qu'un dossier existe, contient au moins 1 fichier et n'est pas vide (taille > 0 octets)."""
@@ -277,7 +283,12 @@ if __name__ == "__main__":
     #directory of databases
     #directory where to save save backups
 
-    config_path = "config.json"
+    #config_path = Path("default_config.json")
+    APP_DIR = get_app_dir()
+    config_path = APP_DIR / "default_config.json"
+    db_path = APP_DIR / "dats" / "switch_light_db.json"
+
+    #config_path = Path("/var/mnt/DATA/DATAsync/Coding/Projects/Python/saves_manager_stuff/config.json")
     config_dict = get_config_json(config_path)
 
     max_backups = config_dict.get("max_backups", 5)
@@ -291,7 +302,7 @@ if __name__ == "__main__":
     #generate_switch_db()
     #print(buggy)
 
-    switch_database = get_config_json(Path("switch_light_db.json"))
+    switch_database = get_config_json(Path(db_path))
 
     #1. EDEN SAVES BACKUP
     #Each Eden user has its own ID

@@ -32,11 +32,16 @@ jobs:
         python -m pip install --upgrade pip
         pip install pyinstaller
 
-    - name: Compiler le projet
+    - name: Compiler avec PyInstaller
       run: |
         pyinstaller --onefile --windowed --name="SwitchSavesSync" gui.py
 
-    - name: Sauvegarder les exécutables générés
+    - name: Copier default_config.json et le dossier dats à côté de l'exécutable
+      run: |
+        cp default_config.json dist/
+        cp -r dats/ dist/
+
+    - name: Sauvegarder les artefacts générés
       uses: actions/upload-artifact@v4
       with:
         name: SwitchSavesSync-${{ matrix.os }}
